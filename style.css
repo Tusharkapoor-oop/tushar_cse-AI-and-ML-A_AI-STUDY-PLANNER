@@ -1,0 +1,28 @@
+body {
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    margin: 30px;
+    background-color: #f0f8ff;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+a, button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 8px;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+input {
+    padding: 8px;
+    margin: 5px;
+    width: 200px;
+}
+

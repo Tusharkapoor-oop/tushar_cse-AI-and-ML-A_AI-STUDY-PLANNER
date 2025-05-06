@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Syllabus Upload | Planner App</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+    }
+    .upload-box {
+      width: 100%;
+      max-width: 520px;
+      margin: 50px auto;
+    }
+    .drag-area {
+      border: 2px dashed #ccc;
+      border-radius: 6px;
+      padding: 28px 20px;
+      text-align: center;
+      color: #777;
+      transition: all 0.2s ease-in-out;
+    }
+    .drag-area.over {
+      background-color: #f8f9fa;
+    }
+    #fileNote {
+      font-size: 0.85rem;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body class="bg-white">
+
+  <div class="upload-box">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <h5 class="mb-3 text-center">Upload Syllabus File</h5>
+        <p class="text-center text-secondary">PDF or TXT files only. Max 16 MB.</p>
+
+        {% if messages %}
+          {% for category, msg in messages %}
+            <div class="alert alert-{{ category }}">
+              {{ msg }}
+              <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+          <div id="dragTarget" class="drag-area mb-3"
+            onclick="triggerFile()" 
+            ondragover="e=>e.preventDefault();this.classList.add('over')" 
+            ondragleave="this.classList.remove('over')" 
+            ondrop="dropHandler(event)">
+            <p class="mb-0">Drop syllabus here or click to upload</p>
+            <input type="file" name="file" id="filePicker" class="d-none" accept=".pdf,.txt" onchange="showFileName()" required>
+          </div>
+
+          <div id="fileNote" class="text-center text-muted text-truncate"></div>
+
+          <button type="submit" class="btn btn-dark w-100">Submit</button>
+        </form>
+
+        <div class="mt-4 text-center">
+          <a href="{{ url_for('index') }}" style="text-decoration:none;">&larr; Return</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const dragBox = document.getElementById('dragTarget');
+    const filePicker = document.getElementById('filePicker');
+    const fileNote = document.getElementById('fileNote');
+
+    function triggerFile() {
+      filePicker.click();
+    }
+
+    function dropHandler(e) {
+      e.preventDefault();
+      dragBox.classList.remove('over');
+      if (e.dataTransfer.files.length > 0) {
+        filePicker.files = e.dataTransfer.files;
+        showFileName();
+      }
+    }
+
+    function showFileName() {
+      const file = filePicker.files[0];
+      fileNote.textContent = file ? 'Selected: ' + file.name : '';
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
