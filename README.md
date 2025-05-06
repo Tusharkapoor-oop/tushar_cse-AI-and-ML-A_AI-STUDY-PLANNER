@@ -20,7 +20,7 @@ Our mission is to remove the stress of manual planning and help students build c
 ---
 
 ##  Video Explanation
-👉 [Click here to watch the project walkthrough video](https://your-video-link-here.com)
+👉 [Click here to watch the project walkthrough video](https://1drv.ms/v/c/8d978615fb15cf51/EYU3bCvuTzVPtICFqLjpOPQB8MB8Iaxig2gaMieL4l6mSQ?e=i3xZil))
 
 ---
 
