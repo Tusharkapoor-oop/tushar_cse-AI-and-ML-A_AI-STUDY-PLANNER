@@ -7,10 +7,10 @@ This project is an AI-based Study Planner designed to help students **automatica
 #  AI-Based Study Planner
 
 ##  Team Members
-- **Tushar** –   Backend Developer  
-- **Manipal** –  Backend Developer  
-- **Poras** –    Frontend Developer  
-- **Swayam** –   Frontend Developer
+- **Tushar** –  Backend Developer  
+- **Manipal** – Backend Developer  
+- **Poras** –  Frontend Developer  
+- **Swayam** –  Frontend Developer
 
 ##  Project Description
 The AI-Based Study Planner is a personalized productivity tool built to help students plan, organize, and track their studies effectively. Using AI-powered logic and a user-friendly interface, the planner suggests daily schedules based on syllabus content, deadlines, and individual study goals.
