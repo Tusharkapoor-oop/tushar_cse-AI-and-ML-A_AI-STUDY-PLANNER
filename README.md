@@ -1,91 +1,87 @@
-#  tushar_cse-AI-and-ML-A_AI-STUDY-PLANNER
+# AI Study Planner
 
-This project is an AI-based Study Planner designed to help students **automatically generate study plans** and **find relevant educational videos**. It combines both frontend and backend components to deliver a smart planning experience. Users interact with the system by uploading a syllabus file, which is then processed to extract key topics. Based on these topics, a personalized study plan is created along with YouTube video suggestions to support the learning process.
+**Syllabus → topics → week-by-week study plan + curated videos.** A Flask app built by a 4-person team; I owned the backend.
 
----
-
-#  AI-Based Study Planner
-
-##  Team Members
-- **Tushar** –  Backend Developer  
-- **Manipal** – Backend Developer  
-- **Poras** –  Frontend Developer  
-- **Swayam** –  Frontend Developer
-
-##  Project Description
-The AI-Based Study Planner is a personalized productivity tool built to help students plan, organize, and track their studies effectively. Using AI-powered logic and a user-friendly interface, the planner suggests daily schedules based on syllabus content, deadlines, and individual study goals.
-
-Our mission is to remove the stress of manual planning and help students build consistent study habits — especially useful during tight exam preparation timelines.
+> Team: **Tushar** (backend) · **Manipal** (backend) · **Poras** (frontend) · **Swayam** (frontend)
 
 ---
 
-##  Video Explanation
-👉 [Click here to watch the project walkthrough video]https://drive.google.com/file/d/1JtjUFm0z1JoPtQdX6HzAEomDywbVcx3T/view?usp=drivesdk
+## What it does
+
+1. **Upload** a syllabus (PDF or TXT).
+2. **Extract** topics (`syllabus_processor.py` — heading/regex parsing).
+3. **Schedule** topics across weeks (`scheduler.py` — deadline-aware spreading).
+4. **Recommend** YouTube videos per topic (`video_recommender.py`).
+5. **Render** dashboard + result pages.
+
+```
+upload → pdfplumber (fallback: PyPDF2) → extract_topics() → session
+      → dashboard.html (topics + video links)
+      → result.html (generated schedule)
+```
 
 ---
 
-##  Technologies Used
-- **Python 3.12.9** *(mandatory version – fixes compatibility issues)*  
-- **Flask** – Web framework for backend  
-- **MySQL** – Relational database for storing user/session data  
-- **HTML + CSS** – Frontend UI  
-- **pdfplumber** – PDF processing  
-- **Flask-Login** – User session management  
-- **Flask-SQLAlchemy** – Database ORM  
-- **AI Logic** – Custom scheduler and video recommendation logic
+## Actual repository layout
 
----
+```
+app.py                    # Flask app (all routes)
+syllabus_processor.py     # topic extraction
+scheduler.py              # schedule generation
+video_recommender.py      # video suggestions
+index.html upload.HTML    # ┐
+dashboard.html result.html│ ├ must live in templates/ (see step 1)
+style.css                 # ┘ must live in static/
+README.md
+extras: project video (mp4), report (pdf), slides (pptx)
+```
 
-##  How to Run the Project
+## How to run
 
-###  1. Install Python (Version 3.12.9 required)
-Make sure you are using Python 3.12.9 to avoid unknown errors.
+> **Important:** Flask only serves templates from `templates/`. The HTML files currently sit at
+> the repo root — reorganize once after cloning (nothing is deleted, just moved into place):
 
-###  2. Install Required Libraries
 ```bash
-pip install flask
-pip install pdfplumber
-pip install werkzeug
-pip install flask_sqlalchemy
-pip install flask_login
-```
+git clone https://github.com/Tusharkapoor-oop/tushar_cse-AI-and-ML-A_AI-STUDY-PLANNER.git
+cd tushar_cse-AI-and-ML-A_AI-STUDY-PLANNER
 
-###  3. Project Folder Structure
+# one-time: put templates/static where Flask expects them
+mkdir -p templates static
+mv index.html dashboard.html result.html templates/
+mv upload.HTML templates/upload.html     # note: lowercase .html for Linux
+mv style.css static/
 
-```
-AI_Study_Planner/
-│
-├── app.py                        # Main Flask app — connects frontend & backend
-│
-├── syllabus_processor.py         # Handles topic extraction from uploaded syllabus
-├── scheduler.py                  # Creates personalized study plan (schedule)
-├── video_recommender.py          # Recommends YouTube videos for topics
-│
-├── uploads/                      # Temp folder to store uploaded files
-│   └── (Uploaded PDFs/TXT files — deleted after processing)
-│
-├── templates/                    # HTML templates (Frontend)
-│   ├── index.html                # Landing page
-│   ├── upload.html               # File upload page
-│   ├── dashboard.html            # Topics + Video Recommendations
-│   └── result.html               # Final Study Plan
-│
-├── static/                       # CSS and other frontend assets
-│   └── styles.css                # Stylesheet for all HTML pages
-```
+# dependencies
+pip install flask pdfplumber PyPDF2 werkzeug flask_sqlalchemy flask_login
 
-###  4. Run the Flask App
-```bash
+# run
 python app.py
+# → http://127.0.0.1:5000
 ```
 
-###  5. Open the App in Your Browser
-Go to [http://127.0.0.1:5000](http://127.0.0.1:5000) to use the planner.
+Test with any text/PDF syllabus — the app deletes your upload immediately after parsing.
 
 ---
 
-## 💬 Final Note
+## Design notes (backend)
 
-This tool was developed with students in mind. If you have any ideas to improve the user experience or extend the AI capabilities, feel free to contribute or reach out!
+- **Encoding-agnostic text reads:** TXT uploads are tried as UTF-8 → Latin-1 → UTF-16.
+- **PDF fallback chain:** `pdfplumber` first (tables + layout), `PyPDF2` if that yields nothing.
+- **Session-scoped state:** topics live in the Flask session — no database required for the core flow.
+- **Upload hygiene:** `secure_filename` + extension allow-list + immediate `os.remove` after parse.
+- **Limit:** 16 MB upload cap (`MAX_CONTENT_LENGTH`).
 
+## Known limitations
 
+- Topic extraction is rule-based (regex/heading heuristics), not an LLM — precision varies with syllabus formatting.
+- `app.run(debug=True)` is the documented dev mode; put a real WSGI server in front for anything shared.
+- No automated tests yet — planned: pytest fixtures around `extract_topics()` with 3 sample syllabi.
+- The walkthrough video (16.7 MB `project video final (2) (1) (1).mp4`) will move to a GitHub Release to keep the clone small.
+
+## Video walkthrough
+
+[Project walkthrough (Google Drive)](https://drive.google.com/file/d/1JtjUFm0z1JoPtQdX6HzAEomDywbVcx3T/view?usp=drivesdk)
+
+## License
+
+No license file yet — MIT intended (to be added by the repository owner).
